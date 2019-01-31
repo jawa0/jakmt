@@ -14,6 +14,8 @@ Why not use a continuous media fluid-simulation approach, like they do in comput
 * I want the fluid to be compressible
 * I want to be able to simulate shock-waves by e.g. sending a sphere at high speed through the gas.
 
+See [Wikipedia's page on the Kinetic Theory of Gases](https://en.wikipedia.org/wiki/Kinetic_theory_of_gases). Or [this summary of kinetic theory on HyperPhysics](http://hyperphysics.phy-astr.gsu.edu/hbase/Kinetic/kinthe.html).
+
 Challenges
 -
 There's lots of molecules. LOTS.
