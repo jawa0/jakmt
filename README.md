@@ -20,7 +20,7 @@ Building / Running
 -
 To build jakmt, you'll need cmake. Running cmake generates the Makefile for your system, which you then build.
 
-Assuming that your in the jakmt repository directory:
+Assuming that you're in the jakmt repository directory:
 
 	mkdir build
 	cd build
