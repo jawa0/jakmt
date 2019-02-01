@@ -16,17 +16,29 @@ Why not use a continuous media fluid-simulation approach, like they do in comput
 
 See [Wikipedia's page on the Kinetic Theory of Gases](https://en.wikipedia.org/wiki/Kinetic_theory_of_gases). Or [this summary of kinetic theory on HyperPhysics](http://hyperphysics.phy-astr.gsu.edu/hbase/Kinetic/kinthe.html).
 
+Building / Running
+-
+To build jakmt, you'll need cmake. Running cmake generates the Makefile for your system, which you then build.
+
+Assuming that your in the jakmt repository directory:
+
+	mkdir build
+	cd build
+	cmake ..
+	make
+	./jakmt
+
 Challenges
 -
 There's lots of molecules. LOTS.
 
-There are Na = 6.02*10^23 molecules of gas in a mole. A mole is like a dozen, but for molecules. It's just a unit of counting. That's a 6 followed by 23 zeroes: 600,000,000,000,000,000,000,000. At Standard Temperature and Pressure (STP), which is 0 degrees C and 1 bar of pressure, one mole of ideal gas has a volume of 22.7L.
+There are Na = 6.02E23 molecules of gas in a mole. A mole is like a dozen, but for molecules. It's just a unit of counting. That's a 6 followed by 23 zeroes: 600,000,000,000,000,000,000,000. At Standard Temperature and Pressure (STP), which is 0 degrees C and 1 bar of pressure, one mole of ideal gas has a volume of 22.7L.
 
 How many molecules are there in one cubic millimetre?
 1 mm^3 = 10^-9 m^3
 22.7 L/mol ~= 0.02 m^3/mol <=> 50 mol/m^3
 
-__1mm^3 contains 3*10^16 molecules! That's 30,000,000,000,000,000__
+__1mm^3 contains 3E16 molecules! That's 30,000,000,000,000,000__
 
 So, in 2019 that's a bit beyond my ability to simulate. How about a cubic micro-metre?
 
