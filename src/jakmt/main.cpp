@@ -1,24 +1,9 @@
-#include <array>
 #include <iostream>
 #include <memory>
+#include <random>
 #include <thread>
 
-
-class Vector3
-{
-	std::array< double, 3 > e;	// elements
-
-public:
-	double operator[](int i) const
-	{
-		return e[i];
-	}
-
-	double & operator[](int i)
-	{
-		return e[i];
-	}
-};
+#include "vector3.hpp"
 
 
 class Particle
@@ -65,7 +50,24 @@ int main()
 	cout << "Allocation took " << elapsedSeconds.count() << " seconds." << endl;
 	cout << endl;
 
-	for (auto t = 0; t < 3; ++t)
+	auto TIME_STEP = 1e-9;	// seconds
+	cout << "dt = " << TIME_STEP << endl;
+
+	// Initialize particle positions...
+	random_device rd;
+	mt19937 rand_gen(rd());	// Mersenne Twister
+	uniform_real_distribution<> rand_coordinate(-0.5, 0.5);
+
+	for (auto i = 0; i < NUM_PARTICLES; ++i)
+	{
+		particleArrays[0][i].position[0] = rand_coordinate(rand_gen);
+		particleArrays[0][i].position[1] = rand_coordinate(rand_gen);
+		particleArrays[0][i].position[2] = rand_coordinate(rand_gen);
+	}
+
+	cout << particleArrays[0][0].position << endl;	
+
+	for (auto t = 0; t < 2; ++t)
 	{
 		// Fake a time-step
 		cout << "Stepping particles..." << endl;
@@ -73,7 +75,7 @@ int main()
 		start = chrono::high_resolution_clock::now();	
 		for (int i = 0; i < NUM_PARTICLES; ++i)
 		{
-			particleArrays[1][i].position[0] = particleArrays[0][i].position[0] + 0.4242;
+			particleArrays[1][i].position = particleArrays[0][i].position + TIME_STEP * particleArrays[0][i].velocity;
 		}
 		elapsedSeconds = chrono::high_resolution_clock::now() - start;
 		cout << "Particle step took " << elapsedSeconds.count() << " seconds." << endl;
@@ -81,7 +83,7 @@ int main()
 		// Output some results so that the step isn't optimized away.
 		for (int i = 0; i < 2; ++i)
 		{
-			cout << particleArrays[1][i].position[0] << endl;
+			cout << particleArrays[1][i].position << endl;
 		}	
 	}
 	return 0;
