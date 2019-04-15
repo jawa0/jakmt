@@ -87,7 +87,7 @@ int main()
 	random_device rd;
 	mt19937 rand_gen(rd());	// Mersenne Twister
 	uniform_real_distribution<> rand_coordinate(-0.5, 0.5);
-	uniform_real_distribution<> rand_speed(-SCALED_SPEED, SCALED_SPEED);	// m/s
+	uniform_real_distribution<> rand_speed(-SCALED_SPEED, SCALED_SPEED);
 
 
 	cout << "Initializing particle positions and velocities..." << endl;
