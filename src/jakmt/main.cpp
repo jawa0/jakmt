@@ -3,6 +3,7 @@
 #include <random>
 #include <thread>
 
+#include "intersect.hpp"
 #include "vector3.hpp"
 
 
@@ -31,7 +32,8 @@ int main()
 
 
 	constexpr int ONE_MILLION = 1000000;
-	constexpr int NUM_PARTICLES = 30 * ONE_MILLION;
+	// constexpr int NUM_PARTICLES = 30 * ONE_MILLION;
+	constexpr int NUM_PARTICLES = 10 * ONE_MILLION;
 
 	using ParticleArrayPtr = unique_ptr< Particle[] >;
 
@@ -43,7 +45,7 @@ int main()
 	auto particleArrays = make_unique< ParticleArrayPtr[] >(2);
 	particleArrays[0] = make_unique< Particle[] >(NUM_PARTICLES);
 	particleArrays[1] = make_unique< Particle[] >(NUM_PARTICLES);
-	
+
 	std::chrono::duration< double > elapsedSeconds = chrono::high_resolution_clock::now() - start;
 
 	cout << "Finished allocating memory." << endl;
@@ -60,21 +62,35 @@ int main()
 
 	constexpr auto  NS_PER_S = 1e9;	// nanoseconds (ns) per second (s)
 	constexpr auto  TIME_STEP = 1;	// nanoseconds (ns)
-	cout << "dt (s) = " << 1 / NS_PER_S << endl;
+	cout << "Simulation time step: " << 1 / NS_PER_S << " s" << endl;
 
 	constexpr auto BOX_SIDE = 1e-6;	// m
-	cout << "Simulation box side (m): " << BOX_SIDE << endl;
+	
+	// Kinetic diameter is a measure applied to atoms and molecules that 
+	// expresses the likelihood that a molecule in a gas will collide with 
+	// another molecule. https://en.wikipedia.org/wiki/Kinetic_diameter
+	// Nitrogen gas N_2 kinetic diameter is 364 pm
+
+	constexpr auto PARTICLE_RADIUS_M = 0.5 * 0.364e-9;
+
+	cout << "Simulation box side: " << BOX_SIDE << " m" << endl;
+	cout << "Molecule kinetic diameter: " << 2 * PARTICLE_RADIUS_M << " m" << endl;
+
+	constexpr auto PARTICLE_RADIUS = PARTICLE_RADIUS_M / BOX_SIDE;
+	cout << "\t=> " << PARTICLE_RADIUS << " box widths" << endl;
 
 	constexpr auto INITIAL_SPEED_COORDINATE_MPS = 500;	// m/s
 	constexpr auto  SCALED_SPEED = INITIAL_SPEED_COORDINATE_MPS / BOX_SIDE / NS_PER_S;
-	cout << "Initial speed coordinate (m/s): " << INITIAL_SPEED_COORDINATE_MPS << endl;
-	cout << "Initial speed coordinate (box width / step): " << SCALED_SPEED << endl;
+	cout << "Initial speed coordinate: " << INITIAL_SPEED_COORDINATE_MPS << " m/s" << endl;
+	cout << "\t=> " << SCALED_SPEED << " box widths / step" << endl;
 
 	random_device rd;
 	mt19937 rand_gen(rd());	// Mersenne Twister
 	uniform_real_distribution<> rand_coordinate(-0.5, 0.5);
 	uniform_real_distribution<> rand_speed(-SCALED_SPEED, SCALED_SPEED);	// m/s
 
+
+	cout << "Initializing particle positions and velocities..." << endl;
 
 	for (auto i = 0; i < NUM_PARTICLES; ++i)
 	{
@@ -100,8 +116,30 @@ int main()
 		start = chrono::high_resolution_clock::now();	
 		for (int i = 0; i < NUM_PARTICLES; ++i)
 		{
+			cout << i << "..." << endl;
+
 			particleArrays[dst][i].position = particleArrays[src][i].position + TIME_STEP * particleArrays[src][i].velocity;
 			particleArrays[dst][i].velocity = particleArrays[src][i].velocity;
+
+			// Ooookay. Let's do some N^2 collision detection :/
+			for (auto j = i + 1; j < NUM_PARTICLES; j++)
+			{
+				if (j % 1000000 == 0)
+				{
+					cout << "\t" << j << "..." << endl;
+				}
+
+				Real tIntersection;
+				bool didIntersect = intersectSweptSpheres(PARTICLE_RADIUS, 
+														  PARTICLE_RADIUS, 
+														  particleArrays[src][i].position, 
+														  particleArrays[dst][i].position, 
+														  particleArrays[src][j].position, 
+														  particleArrays[dst][j].position, 
+														  tIntersection);
+
+			}
+
 		}
 		elapsedSeconds = chrono::high_resolution_clock::now() - start;
 		cout << "Particle step took " << elapsedSeconds.count() << " seconds." << endl;
