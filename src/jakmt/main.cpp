@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <queue>
 #include <random>
 #include <thread>
 
@@ -12,6 +13,26 @@ class Particle
 public:
 	Vector3 position;
 	Vector3 velocity;
+};
+
+
+class CollisionRecord
+{
+public:
+	Real t;
+	int i;
+	int j;
+};
+
+
+class GreaterThanCollisionRecord
+{
+public:
+	// @todo @perf Pass by reference? By value? What should I do?
+	inline bool operator() (const CollisionRecord& cr1, const CollisionRecord & cr2)
+	{
+		return cr1.t > cr2.t;
+	}
 };
 
 
@@ -108,27 +129,42 @@ int main()
 	auto src = 0;
 	auto dst = (src + 1) % 2;
 
-	for (auto t = 0; t < 4; ++t)
+	for (auto t = 0; t < 1; ++t)
 	{
 		// Fake a time-step
+
 		cout << "Stepping particles..." << endl;
-		
 		start = chrono::high_resolution_clock::now();	
+
+		// 1) Move all the particles...
 		for (int i = 0; i < NUM_PARTICLES; ++i)
 		{
-			cout << i << "..." << endl;
+			// cout << i << "..." << endl;
+			// cout << collisionQ.size() << endl;
 
 			particleArrays[dst][i].position = particleArrays[src][i].position + TIME_STEP * particleArrays[src][i].velocity;
 			particleArrays[dst][i].velocity = particleArrays[src][i].velocity;
+		}
+		elapsedSeconds = chrono::high_resolution_clock::now() - start;
+		cout << "Particle step took " << elapsedSeconds.count() << " seconds." << endl;
 
+
+		// 2) Test each pair of particles for collision...
+		cout << "Finding collisions..." << endl;
+		start = chrono::high_resolution_clock::now();	
+
+		priority_queue< CollisionRecord, vector< CollisionRecord >, GreaterThanCollisionRecord > collisionQ;
+
+		for (int i = 0; i < NUM_PARTICLES; ++i)
+		{
 			// Ooookay. Let's do some N^2 collision detection :/
+			if (i % 100 == 0)
+			{
+				cout << i << "..." << endl;
+			}
+
 			for (auto j = i + 1; j < NUM_PARTICLES; j++)
 			{
-				if (j % 1000000 == 0)
-				{
-					cout << "\t" << j << "..." << endl;
-				}
-
 				Real tIntersection;
 				bool didIntersect = intersectSweptSpheres(PARTICLE_RADIUS, 
 														  PARTICLE_RADIUS, 
@@ -138,17 +174,22 @@ int main()
 														  particleArrays[dst][j].position, 
 														  tIntersection);
 
+				if (didIntersect)
+				{
+					CollisionRecord cr{tIntersection, i, j};
+					collisionQ.push(cr);
+				}
 			}
-
 		}
 		elapsedSeconds = chrono::high_resolution_clock::now() - start;
-		cout << "Particle step took " << elapsedSeconds.count() << " seconds." << endl;
+		cout << "Colllision detection took " << elapsedSeconds.count() << " seconds." << endl;
 
 		// Output some results so that the step isn't optimized away.
 		for (int i = 0; i < 1; ++i)
 		{
 			cout << particleArrays[dst][i].position << endl;
 		}
+		cout << collisionQ.top().i << " collided with " << collisionQ.top().j << endl;
 
 		// Swap source and destination arrays...
 		src = (src + 1) % 2;
