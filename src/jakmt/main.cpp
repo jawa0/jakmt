@@ -194,7 +194,6 @@ int main()
 		// Swap source and destination arrays...
 		src = (src + 1) % 2;
 		dst = (dst + 1) % 2;
-		assert(src != dst);
 	}
 	return 0;
 }
