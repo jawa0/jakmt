@@ -8,33 +8,6 @@
 #include "vector3.hpp"
 
 
-class Particle
-{
-public:
-	Vector3 position;
-	Vector3 velocity;
-};
-
-
-class CollisionRecord
-{
-public:
-	Real t;
-	int i;
-	int j;
-};
-
-
-class GreaterThanCollisionRecord
-{
-public:
-	// @todo @perf Pass by reference? By value? What should I do?
-	inline bool operator() (const CollisionRecord& cr1, const CollisionRecord & cr2)
-	{
-		return cr1.t > cr2.t;
-	}
-};
-
 
 int main()
 {
@@ -153,6 +126,9 @@ int main()
 		cout << "Finding collisions..." << endl;
 		start = chrono::high_resolution_clock::now();	
 
+		ParticleCollider collider(PARTICLE_RADIUS + PARTICLE_RADIUS);
+		collider.setParticleArrays(NUM_PARTICLES, particleArrays[src].get(), particleArrays[dst].get());
+
 		priority_queue< CollisionRecord, vector< CollisionRecord >, GreaterThanCollisionRecord > collisionQ;
 
 		for (int i = 0; i < NUM_PARTICLES; ++i)
@@ -166,14 +142,7 @@ int main()
 			for (auto j = i + 1; j < NUM_PARTICLES; j++)
 			{
 				Real tIntersection;
-				bool didIntersect = intersectSweptSpheres(PARTICLE_RADIUS, 
-														  PARTICLE_RADIUS, 
-														  particleArrays[src][i].position, 
-														  particleArrays[dst][i].position, 
-														  particleArrays[src][j].position, 
-														  particleArrays[dst][j].position, 
-														  tIntersection);
-
+				bool didIntersect = collider.intersectSweptSpheres(i, j, tIntersection);
 				if (didIntersect)
 				{
 					CollisionRecord cr{tIntersection, i, j};

@@ -22,16 +22,16 @@ public:
 		return e[i];
 	}
 
-	friend Vector3 operator*(Real s, Vector3 v);
-	friend Vector3 operator+(Vector3 u, Vector3 v);
-	friend Vector3 operator-(Vector3 u, Vector3 v);
+	friend Vector3 operator*(Real s, const Vector3 & v);
+	friend Vector3 operator+(const Vector3 & u, const Vector3 & v);
+	friend Vector3 operator-(const Vector3 & u, const Vector3 & v);
 
-	friend Real dot(Vector3 u, Vector3 v);
+	friend Real dot(const Vector3& u, const Vector3& v);
 	friend std::ostream & operator<<(std::ostream & os, const Vector3);
 };
 
 
-Real dot(Vector3 u, Vector3 v)
+Real dot(const Vector3 & u, const Vector3 & v)
 {
 	return u[0] * v[0] + u[1] * v[1] + u[2] * v[2];
 }
@@ -44,7 +44,7 @@ std::ostream & operator<<(std::ostream & os, const Vector3 v)
 }
 
 
-Vector3 operator*(Real s, Vector3 v)
+Vector3 operator*(Real s, const Vector3 & v)
 {
 	Vector3 u = v;
 	u[0] *= s;
@@ -54,7 +54,7 @@ Vector3 operator*(Real s, Vector3 v)
 }
 
 // Vector3 operator+(const Vector3 & u, const Vector3 & v)
-Vector3 operator+(Vector3 u, Vector3 v)
+Vector3 operator+(const Vector3 & u, const Vector3 & v)
 {
 	Vector3 sum;
 	sum[0] = u[0] + v[0];
@@ -63,7 +63,7 @@ Vector3 operator+(Vector3 u, Vector3 v)
 	return sum;
 }
 
-Vector3 operator-(Vector3 u, Vector3 v)
+Vector3 operator-(const Vector3 & u, const Vector3 & v)
 {
 	Vector3 sum;
 	sum[0] = u[0] - v[0];
