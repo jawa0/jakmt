@@ -6,7 +6,7 @@ Overview
 
 * Simulate a gas by simulating the individual molecules.
 
-CURRENT PERFORMANCE: Doing O(n^2) collision detection on 10M particles will take about 190 hours on my laptop. :/
+CURRENT PERFORMANCE: Doing O(n^2) collision detection on 30M particles will take about 34 days on my 2017 laptop. :/
 
 * KMT Assumptions
     * The molecules are modeled as spheres that bounce off each other, and off the walls of the container, undergoing fully elastic collisions.

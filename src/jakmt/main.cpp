@@ -28,7 +28,7 @@ int main()
 
 	constexpr int ONE_MILLION = 1000000;
 	// constexpr int NUM_PARTICLES = 30 * ONE_MILLION;
-	constexpr int NUM_PARTICLES = 10 * ONE_MILLION;
+	constexpr int NUM_PARTICLES = 30 * ONE_MILLION;
 
 	using ParticleArrayPtr = unique_ptr< Particle[] >;
 
