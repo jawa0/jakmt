@@ -87,11 +87,13 @@ public:
 		const auto displacementAB = _displacements[j] - _displacements[i];
 
 		// Are the spheres initially overlapping?
-		if (dot(initialDisplacementAB, initialDisplacementAB) < _sumOfRadiiSquared)
-		{
-			tIntersection = 0.0;
-			return true;
-		}
+		// @assume spheres are NOT initially overlapping.
+		// @note if this assumption is false, what happens? We miss the intersection?		
+		// if (dot(initialDisplacementAB, initialDisplacementAB) < _sumOfRadiiSquared)
+		// {
+		// 	tIntersection = 0.0;
+		// 	return true;
+		// }
 
 		// We'll use the quadratic equation to solve for normalized time. Set
 		// up the coefficients A, B, C.
