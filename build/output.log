@@ -9,7 +9,7 @@ C++ high-resolution clock period: 1 / 1000000000
 
 Allocating memory for 2 buffers of 30000000 particles...
 Finished allocating memory.
-Allocation took 1.74274 seconds.
+Allocation took 1.36674 seconds.
 
 Simulation time step: 1e-09 s
 Simulation box side: 1e-06 m
@@ -18,9 +18,10 @@ Molecule kinetic diameter: 3.64e-10 m
 Initial speed coordinate: 500 m/s
 	=> 0.5 box widths / step
 Initializing particle positions and velocities...
-(-0.280441, 0.428912, -0.255467)
+Num particles per lattice edge: 311
+(-0.498392, -0.498392, -0.498392)
 Stepping particles...
-Particle step took 2.03962 seconds.
+Particle step took 0.191787 seconds.
 Finding collisions...
 0...
 Checked 0 out of 4.5e+14 pairs.
@@ -29,16 +30,16 @@ Percent done:   0.0000 %
 Checked 2.99999e+09 out of 4.5e+14 pairs.
 Percent done:   0.0007 %
 Pairs processed since last update: 2.99999e+09
-Took 30 seconds.
-Collision pairs processed per second: 9.99998e+07
-Remaining time: 1249.99 hours.
+Took 19 seconds.
+Collision pairs processed per second: 1.57894e+08
+Remaining time: 791.663 hours.
 200...
 Checked 5.99998e+09 out of 4.5e+14 pairs.
 Percent done:   0.0013 %
 Pairs processed since last update: 2.99998e+09
-Took 24 seconds.
-Collision pairs processed per second: 1.24999e+08
-Remaining time: 999.992 hours.
+Took 18 seconds.
+Collision pairs processed per second: 1.66666e+08
+Remaining time: 749.994 hours.
 300...
 Checked 8.99995e+09 out of 4.5e+14 pairs.
 Percent done:   0.0020 %
@@ -50,27 +51,6 @@ Remaining time: 791.657 hours.
 Checked 1.19999e+10 out of 4.5e+14 pairs.
 Percent done:   0.0027 %
 Pairs processed since last update: 2.99996e+09
-Took 19 seconds.
-Collision pairs processed per second: 1.57893e+08
-Remaining time: 791.655 hours.
-500...
-Checked 1.49999e+10 out of 4.5e+14 pairs.
-Percent done:   0.0033 %
-Pairs processed since last update: 2.99995e+09
-Took 19 seconds.
-Collision pairs processed per second: 1.57892e+08
-Remaining time: 791.652 hours.
-600...
-Checked 1.79998e+10 out of 4.5e+14 pairs.
-Percent done:   0.0040 %
-Pairs processed since last update: 2.99994e+09
-Took 32 seconds.
-Collision pairs processed per second: 9.37483e+07
-Remaining time: 1333.3 hours.
-700...
-Checked 2.09998e+10 out of 4.5e+14 pairs.
-Percent done:   0.0047 %
-Pairs processed since last update: 2.99993e+09
-Took 19 seconds.
-Collision pairs processed per second: 1.57891e+08
-Remaining time: 791.647 hours.
+Took 18 seconds.
+Collision pairs processed per second: 1.66665e+08
+Remaining time: 749.989 hours.

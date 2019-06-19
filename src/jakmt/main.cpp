@@ -87,11 +87,37 @@ int main()
 
 	cout << "Initializing particle positions and velocities..." << endl;
 
+	// Let's set particle initial positions on a cubic lattice so that they
+	// initially are not intersecting each other. This saves us from having
+	// to push apart a bunch of particles at time 0.
+	// @assume This will not add artifacts to the simulation? After how 
+	// much time will any "memory" of being in a lattice be lost?
+
+	const int numParticlesPerEdge = (int)ceil(cbrt(NUM_PARTICLES));
+	const int numParticlesPerPlane = numParticlesPerEdge * numParticlesPerEdge;
+	cout << "Num particles per lattice edge: " << numParticlesPerEdge << endl;
+
+	// We want to have "numParticlesPerEdge" particles, with "separation" distance
+	// between them in each coordinate. We also don't want particles right on
+	// the edges of the box, so we'll have a margin on each end equal to half the
+	// linear separation. So if we have E particles per edge, then there are 
+	// E-1 gaps between them. Adding another gap for the two margins, we should
+	// divide the total box width by E.
+
+	const Real separation = 1.0 / numParticlesPerEdge;
+	const Real marginPad = 0.5f * separation;
+
 	for (auto i = 0; i < NUM_PARTICLES; ++i)
 	{
-		particleArrays[0][i].position[0] = rand_coordinate(rand_gen);
-		particleArrays[0][i].position[1] = rand_coordinate(rand_gen);
-		particleArrays[0][i].position[2] = rand_coordinate(rand_gen);
+		const auto iPlane = i / numParticlesPerPlane;
+		const auto iRow = (i % numParticlesPerPlane) / numParticlesPerEdge;
+		const auto iCol = i % numParticlesPerEdge;
+
+		// cout << iPlane << ", " << iRow << ", " << iCol << endl;
+
+		particleArrays[0][i].position[0] = -0.5 + marginPad + iCol * separation;
+		particleArrays[0][i].position[1] = -0.5 + marginPad + iRow * separation;
+		particleArrays[0][i].position[2] = -0.5 + marginPad + iPlane * separation;
 
 		particleArrays[0][i].velocity[0] = rand_speed(rand_gen);
 		particleArrays[0][i].velocity[1] = rand_speed(rand_gen);
