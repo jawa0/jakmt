@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <memory>
 #include <queue>
 #include <random>
@@ -129,14 +130,76 @@ int main()
 		ParticleCollider collider(PARTICLE_RADIUS + PARTICLE_RADIUS);
 		collider.setParticleArrays(NUM_PARTICLES, particleArrays[src].get(), particleArrays[dst].get());
 
+		//
+		// Ooookay. Let's do some N^2 collision detection :/
+		//
+
+		constexpr double NUM_COLLISION_PAIRS = (NUM_PARTICLES * ((double)NUM_PARTICLES - 1)) / 2.0;
 		priority_queue< CollisionRecord, vector< CollisionRecord >, GreaterThanCollisionRecord > collisionQ;
+
+
+		auto t_prev_collision_measurement = chrono::high_resolution_clock::now();
+		double num_collision_pairs_checked = 0;
+		double num_pairs_since_last_update = 0;
 
 		for (int i = 0; i < NUM_PARTICLES; ++i)
 		{
-			// Ooookay. Let's do some N^2 collision detection :/
 			if (i % 100 == 0)
 			{
+				auto elapsed_collision_time = chrono::high_resolution_clock::now() - t_prev_collision_measurement;
+
 				cout << i << "..." << endl;
+				cout << "Checked " << num_collision_pairs_checked << " out of " << NUM_COLLISION_PAIRS << " pairs." << endl;
+
+				{
+					ios oldState(nullptr);
+					oldState.copyfmt(cout);
+
+					auto percentDone = 100.0 * num_collision_pairs_checked / NUM_COLLISION_PAIRS;
+					cout << "Percent done: " << fixed << setw(8) << setprecision(4) << percentDone << " %" << endl;
+
+					cout.copyfmt(oldState);
+				}
+
+				double pairs_per_second;
+				if (num_pairs_since_last_update > 0)
+				{
+					double elapsed_collision_seconds = 
+						chrono::duration_cast< chrono::seconds >(elapsed_collision_time).count();
+						
+					cout << "Pairs processed since last update: " << num_pairs_since_last_update << endl;
+					cout << "Took " << elapsed_collision_seconds << " seconds." << endl;
+
+					pairs_per_second = num_pairs_since_last_update / elapsed_collision_seconds;
+
+				
+					cout << "Collision pairs processed per second: " << pairs_per_second << endl;
+
+					auto num_collision_pairs_remaining = NUM_COLLISION_PAIRS - num_collision_pairs_checked;
+					auto seconds_remaining = num_collision_pairs_remaining / pairs_per_second;
+
+					constexpr auto SECONDS_PER_MINUTE = 60;
+					constexpr auto SECONDS_PER_HOUR = SECONDS_PER_MINUTE * SECONDS_PER_MINUTE;
+
+					cout << "Remaining time: ";
+
+					if (seconds_remaining > SECONDS_PER_HOUR)
+					{
+						cout << seconds_remaining / SECONDS_PER_HOUR << " hours." << endl;
+					}
+					else if (seconds_remaining > SECONDS_PER_MINUTE)
+					{
+						cout << seconds_remaining / SECONDS_PER_MINUTE << " minutes." << endl;
+					}
+					else
+					{
+						cout << seconds_remaining << " seconds." << endl;
+					}
+				}
+
+
+				t_prev_collision_measurement = chrono::high_resolution_clock::now();
+				num_pairs_since_last_update = 0;
 			}
 
 			for (auto j = i + 1; j < NUM_PARTICLES; j++)
@@ -148,6 +211,9 @@ int main()
 					CollisionRecord cr{tIntersection, i, j};
 					collisionQ.push(cr);
 				}
+
+				num_collision_pairs_checked++;
+				num_pairs_since_last_update++;
 			}
 		}
 		elapsedSeconds = chrono::high_resolution_clock::now() - start;
