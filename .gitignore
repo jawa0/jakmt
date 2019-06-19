@@ -1,4 +1,19 @@
+# Mac
 .DS_Store
 
 # MATLAB
 *~
+
+# Visual Studio
+.vs
+*.obj
+*.idb
+*.tlog
+*.iobj
+*.ipdb
+*.cmake
+*.ninja
+out/
+UpgradeLog.htm
+*.FileListAbsolute.txt
+
