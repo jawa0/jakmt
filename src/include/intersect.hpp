@@ -46,7 +46,7 @@ private:
 
 public:
 	ParticleCollider(Real sumOfRadii)
-		: _sumOfRadii(sumOfRadii), _N(0), _displacements(nullptr)
+		: _sumOfRadii(sumOfRadii), _N(0), _particles0(nullptr), _particles1(nullptr), _displacements(nullptr)
 	{
 		_sumOfRadiiSquared = _sumOfRadii * _sumOfRadii;
 	}

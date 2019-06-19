@@ -164,7 +164,7 @@ int main()
 				double pairs_per_second;
 				if (num_pairs_since_last_update > 0)
 				{
-					double elapsed_collision_seconds = 
+					auto elapsed_collision_seconds = 
 						chrono::duration_cast< chrono::seconds >(elapsed_collision_time).count();
 						
 					cout << "Pairs processed since last update: " << num_pairs_since_last_update << endl;
