@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12.3)
+cmake_minimum_required(VERSION 3.7.2)
 project(jakmt)
 add_executable(jakmt src/jakmt/main.cpp)
 
