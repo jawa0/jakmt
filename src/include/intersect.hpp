@@ -83,17 +83,26 @@ public:
 
 	bool intersectSweptSpheres(int i, int j, Real& tIntersection)
 	{
+		// @note @perf Adding this check seemed like a good idea, but made this function
+		// take almost TWICE as long! #AlwaysProfile
+
+		// // We @assume that the spheres are not initially intersecting. If that's true
+		// // AND they're moving away from each other, then they can't possibly intersect.
+
+		// if (dot(_displacements[i], _displacements[j]) < 0.0)
+		// {
+		// 	return false;
+		// }
+
 		const auto initialDisplacementAB = _particles0[j].position - _particles0[i].position;
 		const auto displacementAB = _displacements[j] - _displacements[i];
 
 		// Are the spheres initially overlapping?
-		// @assume spheres are NOT initially overlapping.
-		// @note if this assumption is false, what happens? We miss the intersection?		
-		// if (dot(initialDisplacementAB, initialDisplacementAB) < _sumOfRadiiSquared)
-		// {
-		// 	tIntersection = 0.0;
-		// 	return true;
-		// }
+		if (dot(initialDisplacementAB, initialDisplacementAB) < _sumOfRadiiSquared)
+		{
+			tIntersection = 0.0;
+			return true;
+		}
 
 		// We'll use the quadratic equation to solve for normalized time. Set
 		// up the coefficients A, B, C.
