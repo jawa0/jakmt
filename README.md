@@ -4,7 +4,7 @@ jakmt - Ideal Gas Simulation using Kinetic Molecular Theory (KMT)
 Overview
 -
 
-* Simulate a gas by simulating the individual molecules as idealized balls bouncing off each other, without non-contact forces
+* Simulate a gas by simulating the individual molecules as idealized balls bouncing off each other.
 * Kinetic Molecular Theory (KMT) Assumptions
     * The molecules are modeled as spheres that bounce off each other, and off the walls of the container, undergoing fully elastic collisions.
     * Other than collisions, the molecules have no other interactions with each other, or the walls of the container. For instance, no electronic attraction or repulsion.
@@ -13,7 +13,7 @@ Why not use a continuous media fluid-simulation approach, like they do in comput
 
 * I want the fluid to be compressible
 	* I want to be able to simulate shock-waves by e.g. sending a sphere at high speed through the gas.
-* I'm not mathed-up enough yet to implement Navier-Stokes yet. See: Bridson. Fluid Simulation for Computer Graphics.
+* I'm not mathed-up enough yet to implement Navier-Stokes. See: Bridson. Fluid Simulation for Computer Graphics.
 
 See [Wikipedia's page on the Kinetic Theory of Gases](https://en.wikipedia.org/wiki/Kinetic_theory_of_gases). Or [this summary of kinetic theory on HyperPhysics](http://hyperphysics.phy-astr.gsu.edu/hbase/Kinetic/kinthe.html).
 
