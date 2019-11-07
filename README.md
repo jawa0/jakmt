@@ -59,5 +59,77 @@ TODO
 * GPU acceleration
 * Distribute across multiple machines
 
+Current Performance
+--
+My 2017 Mac Laptop
+-
+	=====================================================
+	jaKMT - Kinetic Molecular Theory Ideal Gas Simulation
+	=====================================================
+	Number of hardware threads supported: 4
+	  NOTE: Currently only using one thread.
+
+	C++ high-resolution clock period: 1 / 1000000000
+	=====================================================
+
+	Allocating memory for 2 buffers of 30000000 particles...
+	Finished allocating memory.
+	Allocation took 1.98674 seconds.
+
+	Simulation time step: 1e-09 s
+	Simulation box side: 1e-06 m
+	Molecule kinetic diameter: 3.64e-10 m
+		=> 0.000182 box widths
+	Initial speed coordinate: 500 m/s
+		=> 0.5 box widths / step
+	Initializing particle positions and velocities...
+	Num particles per lattice edge: 311
+	(-0.498392, -0.498392, -0.498392)
+	Stepping particles...
+	Particle step took 1.63687 seconds.
+	Finding collisions...
+	0...
+	Checked 0 out of 4.5e+14 pairs.
+	Percent done:   0.0000 %
+	100...
+	Checked 2.99999e+09 out of 4.5e+14 pairs.
+	Percent done:   0.0007 %
+	Pairs processed since last update: 2.99999e+09
+	Took 19 seconds.
+	Collision pairs processed per second: 1.57894e+08
+	Remaining time: 791.663 hours.
+	First collision time: 0.00358602
+	200...
+	Checked 5.99998e+09 out of 4.5e+14 pairs.
+	Percent done:   0.0013 %
+	Pairs processed since last update: 2.99998e+09
+	Took 19 seconds.
+	Collision pairs processed per second: 1.57894e+08
+	Remaining time: 791.66 hours.
+	First collision time: 0.00358602
+	300...
+	Checked 8.99995e+09 out of 4.5e+14 pairs.
+	Percent done:   0.0020 %
+	Pairs processed since last update: 2.99997e+09
+	Took 18 seconds.
+	Collision pairs processed per second: 1.66665e+08
+	Remaining time: 749.991 hours.
+	First collision time: 0.00358602
+	400...
+	Checked 1.19999e+10 out of 4.5e+14 pairs.
+	Percent done:   0.0027 %
+	Pairs processed since last update: 2.99996e+09
+	Took 20 seconds.
+	Collision pairs processed per second: 1.49998e+08
+	Remaining time: 833.321 hours.
+	First collision time: 0.00358602
+	500...
+	Checked 1.49999e+10 out of 4.5e+14 pairs.
+	Percent done:   0.0033 %
+	Pairs processed since last update: 2.99995e+09
+	Took 18 seconds.
+	Collision pairs processed per second: 1.66664e+08
+	Remaining time: 749.986 hours.
+	First collision time: 0.00326668
 
 
