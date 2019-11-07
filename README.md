@@ -47,8 +47,17 @@ So, in 2019 that's a bit beyond my ability to simulate. How about a cubic micro-
 
 That's 30 million. __Okay, so let's try to simulate 30 million molecules bouncing around. Go!__
 
+Current Performance
+-
+Doing O(n^2) collision detection on 30M particles will take about 34 days on my 2017 laptop. :/
+
+
 TODO
 -
 * Implement a collision query acceleration data structure, so we're not doing O(n^2) collision detection. I'm going to try Thatcher Ulrich's Loose Octrees.
+* Multithreading
+* GPU acceleration
+* Distribute across multiple machines
+
 
 
