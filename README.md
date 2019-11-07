@@ -49,6 +49,6 @@ That's 30 million. __Okay, so let's try to simulate 30 million molecules bouncin
 
 TODO
 -
-* Implement a collision query acceleration data structure, so we're not doing O(n^2) collision detection. I'm going to try Thatcher Ulrich's Looke Octrees.
+* Implement a collision query acceleration data structure, so we're not doing O(n^2) collision detection. I'm going to try Thatcher Ulrich's Loose Octrees.
 
 
