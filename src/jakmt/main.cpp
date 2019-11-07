@@ -221,6 +221,8 @@ int main()
 					{
 						cout << seconds_remaining << " seconds." << endl;
 					}
+
+					cout << "First collision time: " << collisionQ.top().t << endl;
 				}
 
 

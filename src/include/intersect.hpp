@@ -125,7 +125,15 @@ public:
 		// @todo: figure out / test whether either root can be < 0. E.g. for both spheres
 		// flying away from a point where they would have intersected, in the past.
 
-		tIntersection = std::min(root0, root1);
+		if (root0 < 0 && root1 < 0)
+		{
+			return false;
+		}
+		else
+		{
+			// std::cout << "tIntersection = (" << root0 << ", " << root1 << ")" << std::endl;
+			tIntersection = std::min(root0, root1);
+		}
 		return true;
 	}
 };
