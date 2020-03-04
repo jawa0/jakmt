@@ -22,6 +22,10 @@ int main()
 	cout << endl;
 	cout << "C++ high-resolution clock period: " << chrono::high_resolution_clock::period::num <<
 		" / " << chrono::high_resolution_clock::period::den << endl;
+	cout << endl;
+	cout << "sizeof(Particle) = " << sizeof(Particle) << " bytes." << endl;
+	cout << "sizeof(CollisionRecord) = " << sizeof(CollisionRecord) << " bytes." << endl;
+	// cout << "sizeof(particleArrays[0])"
 	cout << "=====================================================" << endl;
 	cout << endl;
 
@@ -161,12 +165,17 @@ int main()
 		//
 
 		constexpr double NUM_COLLISION_PAIRS = (NUM_PARTICLES * ((double)NUM_PARTICLES - 1)) / 2.0;
+
+		cout << "\nAllocating priority queue of CollisionRecord..." << endl;
 		priority_queue< CollisionRecord, vector< CollisionRecord >, GreaterThanCollisionRecord > collisionQ;
+		cout << "Finished allocating priority queue of CollisionRecord.\n" << endl;
 
 
 		auto t_prev_collision_measurement = chrono::high_resolution_clock::now();
 		double num_collision_pairs_checked = 0;
 		double num_pairs_since_last_update = 0;
+
+		size_t numCollisionRecords = 0;
 
 		for (int i = 0; i < NUM_PARTICLES; ++i)
 		{
@@ -236,8 +245,16 @@ int main()
 				bool didIntersect = collider.intersectSweptSpheres(i, j, tIntersection);
 				if (didIntersect)
 				{
+					// @todo @perf remove dynamic allocation
 					CollisionRecord cr{tIntersection, i, j};
 					collisionQ.push(cr);
+
+					numCollisionRecords++;
+					if (numCollisionRecords % (size_t)1e2 == 0 &&
+						numCollisionRecords > 0 )
+					{
+						cout << "# CollisionRecords = " << numCollisionRecords << endl;
+					}
 				}
 
 				num_collision_pairs_checked++;
