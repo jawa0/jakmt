@@ -71,7 +71,9 @@ public:
 		
 		if (!_displacements)
 		{
+			std::cout << "ParticleCollider::setParticleArrays: allocating _displacements. N = " << N << "..." << std::endl;
 			_displacements = new Vector3[N];
+			std::cout << "ParticleCollider::setParticleArrays: finished allocating _displacements." << std::endl;
 			_N = N;
 		}
 
