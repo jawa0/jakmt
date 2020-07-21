@@ -1,3 +1,4 @@
+#include <cassert>
 #include <iostream>
 #include <iomanip>
 #include <memory>
@@ -8,6 +9,9 @@
 #include "intersect.hpp"
 #include "vector3.hpp"
 
+
+void
+initializeParticleArrays(int numParticles, Particle particles[], Real scaledSpeed, std::random_device &rd);
 
 
 int main()
@@ -34,14 +38,12 @@ int main()
 	// constexpr int NUM_PARTICLES = 30 * ONE_MILLION;
 	constexpr int NUM_PARTICLES = 30 * ONE_MILLION;
 
-	using ParticleArrayPtr = unique_ptr< Particle[] >;
-
 	// We want a pre-step and a post-step array.
 	cout << "Allocating memory for 2 buffers of " << NUM_PARTICLES << " particles..." << endl;
 
 	auto start = chrono::high_resolution_clock::now();
 
-	auto particleArrays = make_unique< ParticleArrayPtr[] >(2);
+	array< unique_ptr< Particle[] >, 2 > particleArrays;
 	particleArrays[0] = make_unique< Particle[] >(NUM_PARTICLES);
 	particleArrays[1] = make_unique< Particle[] >(NUM_PARTICLES);
 
@@ -84,51 +86,9 @@ int main()
 	cout << "\t=> " << SCALED_SPEED << " box widths / step" << endl;
 
 	random_device rd;
-	mt19937 rand_gen(rd());	// Mersenne Twister
-	uniform_real_distribution<> rand_coordinate(-0.5, 0.5);
-	uniform_real_distribution<> rand_speed(-SCALED_SPEED, SCALED_SPEED);
+    initializeParticleArrays(NUM_PARTICLES, particleArrays[0].get(), SCALED_SPEED, rd);
 
-
-	cout << "Initializing particle positions and velocities..." << endl;
-
-	// Let's set particle initial positions on a cubic lattice so that they
-	// initially are not intersecting each other. This saves us from having
-	// to push apart a bunch of particles at time 0.
-	// @assume This will not add artifacts to the simulation? After how 
-	// much time will any "memory" of being in a lattice be lost?
-
-	const int numParticlesPerEdge = (int)ceil(cbrt(NUM_PARTICLES));
-	const int numParticlesPerPlane = numParticlesPerEdge * numParticlesPerEdge;
-	cout << "Num particles per lattice edge: " << numParticlesPerEdge << endl;
-
-	// We want to have "numParticlesPerEdge" particles, with "separation" distance
-	// between them in each coordinate. We also don't want particles right on
-	// the edges of the box, so we'll have a margin on each end equal to half the
-	// linear separation. So if we have E particles per edge, then there are 
-	// E-1 gaps between them. Adding another gap for the two margins, we should
-	// divide the total box width by E.
-
-	const Real separation = 1.0 / numParticlesPerEdge;
-	const Real marginPad = 0.5f * separation;
-
-	for (auto i = 0; i < NUM_PARTICLES; ++i)
-	{
-		const auto iPlane = i / numParticlesPerPlane;
-		const auto iRow = (i % numParticlesPerPlane) / numParticlesPerEdge;
-		const auto iCol = i % numParticlesPerEdge;
-
-		// cout << iPlane << ", " << iRow << ", " << iCol << endl;
-
-		particleArrays[0][i].position[0] = -0.5 + marginPad + iCol * separation;
-		particleArrays[0][i].position[1] = -0.5 + marginPad + iRow * separation;
-		particleArrays[0][i].position[2] = -0.5 + marginPad + iPlane * separation;
-
-		particleArrays[0][i].velocity[0] = rand_speed(rand_gen);
-		particleArrays[0][i].velocity[1] = rand_speed(rand_gen);
-		particleArrays[0][i].velocity[2] = rand_speed(rand_gen);		
-	}
-
-	cout << particleArrays[0][0].position << endl;	
+    cout << particleArrays[0][0].position << endl;
 
 	auto src = 0;
 	auto dst = (src + 1) % 2;
@@ -146,7 +106,9 @@ int main()
 			// cout << i << "..." << endl;
 			// cout << collisionQ.size() << endl;
 
-			particleArrays[dst][i].position = particleArrays[src][i].position + TIME_STEP * particleArrays[src][i].velocity;
+			particleArrays[dst][i].position = particleArrays[src][i].position +
+			        TIME_STEP * particleArrays[src][i].velocity;
+
 			particleArrays[dst][i].velocity = particleArrays[src][i].velocity;
 		}
 		elapsedSeconds = chrono::high_resolution_clock::now() - start;
@@ -276,4 +238,53 @@ int main()
 		dst = (dst + 1) % 2;
 	}
 	return 0;
+}
+
+void
+initializeParticleArrays(int numParticles, Particle particles[], Real scaledSpeed, std::random_device &rd) {
+    assert(particles);
+
+    std::mt19937 rand_gen(rd());    // Mersenne Twister
+    std::uniform_real_distribution<> rand_coordinate(-0.5, 0.5);
+    std::uniform_real_distribution<> rand_speed(-scaledSpeed, scaledSpeed);
+
+
+    std::cout << "Initializing particle positions and velocities..." << std::endl;
+
+    // Let's set particle initial positions on a cubic lattice so that they
+    // initially are not intersecting each other. This saves us from having
+    // to push apart a bunch of particles at time 0.
+    // @assume This will not add artifacts to the simulation? After how
+    // much time will any "memory" of being in a lattice be lost?
+
+    const int numParticlesPerEdge = (int)ceil(cbrt(numParticles));
+    const int numParticlesPerPlane = numParticlesPerEdge * numParticlesPerEdge;
+    std::cout << "Num particles per lattice edge: " << numParticlesPerEdge << std::endl;
+
+    // We want to have "numParticlesPerEdge" particles, with "separation" distance
+    // between them in each coordinate. We also don't want particles right on
+    // the edges of the box, so we'll have a margin on each end equal to half the
+    // linear separation. So if we have E particles per edge, then there are
+    // E-1 gaps between them. Adding another gap for the two margins, we should
+    // divide the total box width by E.
+
+    const Real separation = 1.0 / numParticlesPerEdge;
+    const Real marginPad = 0.5f * separation;
+
+    for (auto i = 0; i < numParticles; ++i)
+    {
+        const auto iPlane = i / numParticlesPerPlane;
+        const auto iRow = (i % numParticlesPerPlane) / numParticlesPerEdge;
+        const auto iCol = i % numParticlesPerEdge;
+
+        // cout << iPlane << ", " << iRow << ", " << iCol << endl;
+
+        particles[i].position[0] = -0.5 + marginPad + iCol * separation;
+        particles[i].position[1] = -0.5 + marginPad + iRow * separation;
+        particles[i].position[2] = -0.5 + marginPad + iPlane * separation;
+
+        particles[i].velocity[0] = rand_speed(rand_gen);
+        particles[i].velocity[1] = rand_speed(rand_gen);
+        particles[i].velocity[2] = rand_speed(rand_gen);
+    }
 }

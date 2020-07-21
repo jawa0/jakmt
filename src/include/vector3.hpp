@@ -12,6 +12,8 @@ class Vector3
 	std::array< Real, 3 > e;	// elements
 
 public:
+    Vector3() = default;
+
 	Real operator[](int i) const
 	{
 		return e[i];
