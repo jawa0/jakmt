@@ -4,7 +4,7 @@
 #include <random>
 
 
-using Real = double;
+using Real = float;
 
 
 class Vector3

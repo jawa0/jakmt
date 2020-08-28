@@ -174,7 +174,6 @@ int main()
 		auto t_prev_collision_measurement = chrono::high_resolution_clock::now();
 		double num_collision_pairs_checked = 0;
 		double num_pairs_since_last_update = 0;
-
 		size_t numCollisionRecords = 0;
 
 		for (int i = 0; i < NUM_PARTICLES; ++i)
